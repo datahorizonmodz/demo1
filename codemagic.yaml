@@ -7,11 +7,9 @@ workflows:
     environment:
       java: 17
     scripts:
-      - name: Install pinned Android SDK packages
+      - name: Prepare Android SDK and pinned packages
         script: |
-          set -e
-          sdkmanager "platforms;android-36" "build-tools;35.0.0"
-          printf 'sdk.dir=%s\n' "$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+          bash ci/prepare-android-sdk.sh
       - name: Compile and inspect debug APK
         script: |
           set -e

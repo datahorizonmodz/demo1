@@ -39,6 +39,10 @@ Choose **DATZON Glass Lab - Manual Debug APK** on `main`, then Start new build.
 `codemagic.yaml` intentionally has no automatic GitHub trigger. No release signing
 key is required. The artifact is `app/build/outputs/apk/debug/app-debug.apk`.
 
+SDK preparation uses `ci/prepare-android-sdk.sh` to resolve the SDK tools directly;
+it does not require sdkmanager on PATH. Existing API 36 / build-tools 35.0.0
+packages are reused, and missing packages are installed using the resolved tool.
+
 | Tool | Pin |
 | --- | --- |
 | Android Gradle Plugin | 8.13.2 |
