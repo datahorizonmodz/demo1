@@ -11,7 +11,7 @@ workflows:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
       - name: Build installable debug APK
         script: |
-          bash ./gradlew --no-daemon --stacktrace :app:assembleDebug
+          bash ./gradlew --no-daemon --console=plain :app:assembleDebug
     artifacts:
       - app/build/outputs/apk/debug/*.apk
       - app/build/outputs/logs/*
