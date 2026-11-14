@@ -40,11 +40,12 @@ fun GlassEditor(
         onDismissRequest = onDismiss,
         containerColor = Color(0xFF1C1B19),
         contentColor = Color(0xFFF5EFE5),
+        scrimColor = Color.Transparent,
         dragHandle = { BottomSheetDefaults.DragHandle(color = Color(0xFF77736B)) },
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp)
     ) {
         Column(
-            Modifier.fillMaxWidth().heightIn(max = 670.dp)
+            Modifier.fillMaxWidth().heightIn(max = 350.dp)
                 .verticalScroll(rememberScrollState())
                 .padding(start = 19.dp, end = 19.dp, bottom = 36.dp)
         ) {
