@@ -2,6 +2,8 @@ package id.datzon.glasslab
 
 import android.view.Choreographer
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -55,6 +57,11 @@ fun GlassLabScreen() {
     var playing by remember { mutableStateOf(false) }
     var selectedNav by remember { mutableIntStateOf(0) }
     val backdrop = rememberGraphicsLayer()
+    val previewBottom by animateDpAsState(
+        targetValue = if (editorVisible) 390.dp else 14.dp,
+        animationSpec = tween(durationMillis = 340),
+        label = "lift glass preview"
+    )
 
     LaunchedEffect(mini) { store.save("mini", mini) }
     LaunchedEffect(nav) { store.save("navbar", nav) }
@@ -95,7 +102,7 @@ fun GlassLabScreen() {
         }
 
         Column(
-            Modifier.align(Alignment.BottomCenter).padding(bottom = 14.dp),
+            Modifier.align(Alignment.BottomCenter).padding(bottom = previewBottom),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             GlassPane(
