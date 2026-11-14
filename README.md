@@ -27,7 +27,7 @@ To transfer an effect to DATZON Music, copy both `GlassConfig.kt` and `GlassEngi
 - Minimum API: Android 13 (API 33)
 - Compile SDK: 36
 - Kotlin 2.2.21, Android Gradle Plugin 8.13.2, Gradle 8.13
-- Compose BOM 2026.09.00
+- Compose BOM 2025.10.01
 - Build output: `app/build/outputs/apk/debug/app-debug.apk`
 
 ## Build manually with Codemagic (no auto triggers)
@@ -43,6 +43,10 @@ To transfer an effect to DATZON Music, copy both `GlassConfig.kt` and `GlassEngi
 The workflow lives in the root `codemagic.yaml`. It uses **mac_mini_m2** and JDK 17, bootstraps Gradle 8.13, runs `assembleDebug`, and collects the resulting unsigned-for-release but **debug-signed installable** APK. No keystore upload is required. It has **no automatic trigger** so GitHub pushes will not consume build time.
 
 The `gradlew` in this repository is a small shell bootstrap that fetches the official Gradle 8.13 distribution when missing. Use `bash ./gradlew :app:assembleDebug`, not `./gradlew`, unless the file is marked executable after clone.
+
+## Known build troubleshooting
+
+First Codemagic run failed at Gradle dependency metadata: Compose 1.12.1 required compileSdk 37 and AGP 9.1. Updated to **Compose BOM 2025.10.01** (Compose 1.9.4) and **Activity Compose 1.11.0** to stay compatible with compileSdk 36 / AGP 8.13.2. Also corrected GraphicsLayer imports. Re-run the manual workflow against the latest main commit. This fix has not yet been compile-verified.
 
 ## Current verification status
 
