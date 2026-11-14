@@ -1,3 +1,4 @@
+# Manual only: intentionally no triggering/events block.
 workflows:
   glass-lab-manual-debug:
     name: DATZON Glass Lab - Manual Debug APK
@@ -6,12 +7,16 @@ workflows:
     environment:
       java: 17
     scripts:
-      - name: Configure Android SDK
+      - name: Install pinned Android SDK packages
         script: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
-      - name: Build installable debug APK
+          set -e
+          sdkmanager "platforms;android-36" "build-tools;35.0.0"
+          printf 'sdk.dir=%s\n' "$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Compile and inspect debug APK
         script: |
-          bash ./gradlew --no-daemon --console=plain :app:assembleDebug
+          set -e
+          bash ./gradlew --no-daemon --console=plain --max-workers=2 :app:assembleDebug :app:lintDebug
     artifacts:
       - app/build/outputs/apk/debug/*.apk
       - app/build/outputs/logs/*
+      - app/build/reports/lint-results-debug.html

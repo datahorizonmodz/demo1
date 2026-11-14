@@ -2,8 +2,10 @@
 <resources>
     <style name="Theme.GlassLab" parent="android:style/Theme.Material.NoActionBar">
         <item name="android:fontFamily">sans</item>
-        <item name="android:statusBarColor">#776A50</item>
-        <item name="android:navigationBarColor">#171612</item>
+        <item name="android:windowSplashScreenBackground">#101214</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher</item>
+        <item name="android:statusBarColor">#101214</item>
+        <item name="android:navigationBarColor">#101214</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
     </style>
