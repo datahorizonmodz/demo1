@@ -1,5 +1,7 @@
 package id.datzon.glasslab
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import android.graphics.RuntimeShader
 import android.graphics.Shader
 import android.graphics.RenderEffect as AndroidRenderEffect
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.matchParentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +29,7 @@ import androidx.compose.ui.graphics.drawscope.drawLayer
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.layer.GraphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.unit.dp
@@ -57,9 +61,9 @@ half4 main(float2 xy) {
     half r = composable.eval(clamp(origin + shift, float2(0.0), b - float2(1.0))).r;
     half bch = composable.eval(clamp(origin - shift, float2(0.0), b - float2(1.0))).b;
     return half4(
-        min(r + half(rim * highlight * 0.12), 1.0h),
-        min(center.g + half(rim * highlight * 0.11), 1.0h),
-        min(bch + half(rim * highlight * 0.13), 1.0h),
+        min(r + half(rim * highlight * 0.12), half(1.0)),
+        min(center.g + half(rim * highlight * 0.11), half(1.0)),
+        min(bch + half(rim * highlight * 0.13), half(1.0)),
         center.a
     );
 }
@@ -76,9 +80,24 @@ fun GlassPane(
     var origin by remember { mutableStateOf(Offset.Zero) }
     val shape = RoundedCornerShape(config.radius.dp)
     val shader = remember { RuntimeShader(GLASS_AGSL) }
+    var isPressed by remember { mutableStateOf(false) }
+    val pressScale by animateFloatAsState(
+        targetValue = if (isPressed) config.pressScale else 1f,
+        animationSpec = spring(dampingRatio = config.damping, stiffness = config.stiffness),
+        label = "glass spring"
+    )
 
     Box(
         modifier = modifier
+            .graphicsLayer { scaleX = pressScale; scaleY = pressScale }
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        isPressed = event.changes.any { it.pressed }
+                    }
+                }
+            }
             .onGloballyPositioned { origin = it.positionInRoot() }
             .shadow(config.shadow.dp, shape)
             .clip(shape)
